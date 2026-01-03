@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SwaraBharat - Citizen Voice Platform">
+    <title>SwaraBharat – Citizen Voice</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --cyan: #06b6d4;
+            --purple: #a855f7;
+            --bg-void: #020617;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-void);
+            color: #f8fafc;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Ambient mesh + orbs (from index1) */
+        .ambient-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #020617 100%);
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: floatOrb 20s infinite alternate ease-in-out;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            top: -10%;
+            left: -10%;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: var(--cyan);
+            bottom: -10%;
+            right: -10%;
+        }
+
+        .orb-3 {
+            width: 300px;
+            height: 300px;
+            background: var(--purple);
+            top: 40%;
+            left: 40%;
+            opacity: 0.2;
+        }
+
+        @keyframes floatOrb {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(30px, 50px) scale(1.1);
+            }
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+            pointer-events: none;
+        }
+
+        /* Nav (from index1) */
+        nav {
+            position: sticky;
+            top: 20px;
+            width: 90%;
+            max-width: 1200px;
+            margin: 18px auto;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.35);
+            backdrop-filter: blur(12px);
+            border-radius: 50px;
+            padding: 0.6rem 1.6rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            color: #fff;
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 1.25rem;
+        }
+
+        .nav-items a {
+            color: #94a3b8;
+            font-weight: 500;
+            font-size: 0.95rem;
+            text-decoration: none;
+        }
+
+        nav a {
+            text-decoration: none;
+        }
+
+        .cta-btn {
+            background: linear-gradient(135deg, var(--primary), var(--cyan));
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            font-weight: 600;
+        }
+
+        /* Centered card container (adapted from original) */
+        .card-wrap {
+            max-width: 720px;
+            margin: 3rem auto;
+            padding: 28px;
+            border-radius: 14px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            box-shadow: 0 10px 40px rgba(2, 6, 23, 0.6);
+        }
+
+        h1 {
+            color: #fff;
+            margin-bottom: 8px;
+            font-size: 30px;
+        }
+
+        p {
+            color: #cbd5e1;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            min-height: 140px;
+            resize: vertical;
+            background: rgba(255, 255, 255, 0.02);
+            color: #fff;
+        }
+
+        textarea::placeholder {
+            color: #94a3b8;
+        }
+
+        textarea:focus {
+            outline: none;
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.08);
+            border-color: rgba(99, 102, 241, 0.6);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            font-weight: 700;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .voice-btn {
+            background: linear-gradient(90deg, #6a7ef2, #5b63d8);
+            color: #fff;
+        }
+
+        .submit-btn {
+            background: linear-gradient(90deg, #10b981, #059669);
+            color: #fff;
+        }
+
+        #status {
+            margin-top: 18px;
+            padding: 12px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        #status.success {
+            display: block;
+            background: linear-gradient(90deg, #052e07, #083e11);
+            color: #b7f3c1;
+        }
+
+        #status.error {
+            display: block;
+            background: linear-gradient(90deg, #3b0b0b, #5c0f0f);
+            color: #ffd9d9;
+        }
+
+        @media (max-width:900px) {
+            nav {
+                width: 95%;
+                padding: 0.6rem 1rem;
+            }
+
+            .nav-items {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ambient-mesh">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+    <div class="grid-overlay"></div>
+
+    <nav>
+        <a href="index.html" class="logo">
+            <i class="fas fa-fingerprint" style="color: var(--cyan);"></i> SwaraBharat
+        </a>
+        <div class="nav-items">
+            <a href="vision.html">Vision</a>
+            <a href="technolgy.html">Technology</a>
+            <a href="impact.html">Impact</a>
+        </div>
+        <a href="join.html" class="cta-btn">Join Grid</a>
+    </nav>
+    <div class="card-wrap">
+        <h1>🎤 SwaraBharat</h1>
+        <p>Speak or type your problem in your own language.</p>
+
+        <textarea id="input" placeholder="Speak or type your problem"></textarea>
+
+        <div class="button-group">
+            <button id="speakBtn" class="voice-btn" onclick="startVoiceInput()">🎙️ Speak</button>
+            <button id="submitBtn" class="submit-btn" onclick="submitIssue()">✓ Submit</button>
+        </div>
+
+        <div id="status" role="alert" aria-live="polite"></div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+
+</html>

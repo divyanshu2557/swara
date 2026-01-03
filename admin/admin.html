@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwaraBharat – Admin Dashboard</title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-void: #020617;
+            --panel: rgba(30, 41, 59, 0.45);
+            --primary: #6366f1;
+            --cyan: #06b6d4;
+            --glass-border: 1px solid rgba(255, 255, 255, 0.06);
+            --font-head: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-void);
+            color: #e6eef8;
+            line-height: 1.6
+        }
+
+        /* Remove visible outline for links when focused/clicked */
+        a,
+        a:focus,
+        a:active {
+            outline: none;
+            box-shadow: none;
+            text-decoration: none;
+        }
+
+        .ambient-mesh {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: radial-gradient(circle at 30% 20%, rgba(99, 102, 241, 0.08), transparent), radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.05), transparent)
+        }
+
+        nav {
+            position: sticky;
+            top: 18px;
+            max-width: 1200px;
+            margin: 12px auto;
+            background: rgba(3, 7, 18, 0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 36px;
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: var(--glass-border)
+        }
+
+        .logo {
+            font-family: var(--font-head);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem
+        }
+
+        .logo i {
+            color: var(--cyan) !important
+        }
+
+        .nav-items {
+            display: flex;
+            gap: 18px;
+            align-items: center
+        }
+
+        .nav-items a {
+            color: #94a3b8;
+            font-weight: 600
+        }
+
+        .cta-btn {
+            background: linear-gradient(135deg, var(--primary), var(--cyan));
+            color: white;
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: none;
+            font-weight: 600
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer
+        }
+
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 8px;
+            border-radius: 10px;
+            color: #cbd5e1
+        }
+
+        header {
+            max-width: 1200px;
+            margin: 18px auto 0;
+            padding: 16px
+        }
+
+        header h1 {
+            font-family: var(--font-head);
+            color: var(--primary);
+            font-size: 20px
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 24px
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px
+        }
+
+        .card {
+            background: var(--panel);
+            border: var(--glass-border);
+            border-radius: 16px;
+            padding: 18px;
+            text-align: center;
+            backdrop-filter: blur(6px)
+        }
+
+        .card h3 {
+            font-size: 13px;
+            color: #cbd5e1;
+            margin-bottom: 8px
+        }
+
+        .card p {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff
+        }
+
+        .section {
+            margin-bottom: 28px
+        }
+
+        .section h2 {
+            color: #c7d2fe;
+            margin-bottom: 12px
+        }
+
+        /* default (mobile-first): comfortable chart height */
+        canvas {
+            width: 100%;
+            height: 260px;
+            background: var(--panel);
+            border-radius: 12px;
+            padding: 12px;
+            border: var(--glass-border);
+            max-height: 400px
+        }
+
+        /* Desktop: reduce chart height to avoid oversized graphs */
+        @media(min-width:900px) {
+            canvas {
+                height: 180px
+            }
+        }
+
+        input,
+        select {
+            background: #061224;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            color: #e6eef8;
+            padding: 8px;
+            border-radius: 8px
+        }
+
+        .small-muted {
+            color: #94a3b8;
+            font-size: 13px
+        }
+
+        footer {
+            max-width: 1200px;
+            margin: 40px auto 60px;
+            text-align: center;
+            color: #64748b
+        }
+
+        @media(max-width:900px) {
+            .cards {
+                grid-template-columns: 1fr
+            }
+
+            .nav-items {
+                display: none
+            }
+
+            .menu-toggle {
+                display: block
+            }
+
+            nav {
+                padding: 10px
+            }
+        }
+
+        @media(max-width:600px) {
+            .nav-items.mobile-open {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                margin-top: 12px
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="ambient-mesh"></div>
+    <nav>
+        <a href="../index.html" class="logo"><i class="fas fa-fingerprint"></i> SwaraBharat</a>
+        <div class="nav-items" id="navItems">
+            <a href="../vision.html">Vision</a>
+            <a href="../technolgy.html">Technology</a>
+            <a href="../impact.html">Impact</a>
+        </div>
+
+    </nav>
+
+    <header>
+        <div class="hero-badge small-muted">Admin • Dashboard</div>
+        <h1>SwaraBharat — Admin Panel</h1>
+    </header>
+
+    <div class="container">
+
+        <div id="demoArea" style="margin-bottom:18px;">
+            <div style="display:flex; gap:12px; align-items:center;">
+                <button id="openDemo" class="btn">Load Demo Examples</button>
+                <input id="demoMessage" placeholder="Type message to analyze"
+                    style="flex:1; padding:8px; border-radius:8px; border:1px solid #1e293b; background:#020617; color:#e5e7eb;" />
+                <button id="analyzeDemo" class="btn">Analyze</button>
+                <div style="display:flex; gap:8px; align-items:center; margin-left:8px;">
+                    <label style="font-size:13px; color:#94a3b8">Live AI</label>
+                    <input id="liveToggle" type="checkbox" aria-label="Use live AI" />
+                    <div id="liveStatus" style="color:#94a3b8; font-size:13px;">AI: checking...</div>
+                    <div id="quotaStatus" style="color:#94a3b8; font-size:13px; margin-left:8px;">Quota: -</div>
+                </div>
+            </div>
+            <div id="demoExamplesContainer"
+                style="margin-top:12px; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px;">
+            </div>
+        </div>
+
+        <div class="cards">
+            <div class="card">
+                <h3>Total Voices</h3>
+                <p id="totalVoices">0</p>
+            </div>
+
+            <div class="card">
+                <h3>High Urgency</h3>
+                <p id="highUrgency">0</p>
+            </div>
+
+            <div class="card">
+                <h3>Top Issue</h3>
+                <p id="topIssue">-</p>
+            </div>
+        </div>
+
+
+
+        <div class="section">
+            <h2>Emotion Distribution</h2>
+            <canvas id="emotionChart"></canvas>
+        </div>
+
+        <div class="section">
+            <h2>Issue Categories</h2>
+            <canvas id="issueChart"></canvas>
+        </div>
+
+        <div class="section">
+            <h2>Raw Reports</h2>
+            <div style="display:flex; gap:12px; align-items:center; margin-bottom:12px;">
+                <input id="reportSearch" placeholder="Search summary or issue"
+                    style="flex:1; padding:8px; border-radius:8px; border:1px solid #1e293b; background:#020617; color:#e5e7eb;" />
+                <select id="reportFilterUrgency"
+                    style="padding:8px; border-radius:8px; border:1px solid #1e293b; background:#020617; color:#e5e7eb;">
+                    <option value="">All urgencies</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                </select>
+                <button id="refreshReports" class="cta-btn" style="padding:0.5rem 1rem;">Refresh</button>
+                <button id="downloadCsv" class="cta-btn" style="padding:0.5rem 1rem;">Download CSV</button>
+                <div style="color:#94a3b8; margin-left:8px;" id="reportsStatus"></div>
+            </div>
+            <div id="reportsTableContainer">
+                <!-- Filled dynamically -->
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        © 2025 SwaraBharat • AI Civic Intelligence
+    </footer>
+
+    <script src="admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('menuToggle');
+            const nav = document.getElementById('navItems');
+            if (!btn || !nav) return;
+            btn.addEventListener('click', () => {
+                nav.classList.toggle('mobile-open');
+            });
+        });
+    </script>
+</body>
+
+</html>
